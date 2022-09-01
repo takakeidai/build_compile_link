@@ -1,0 +1,25 @@
+""""""""""""""""""""""""""""""
+In static_link/without_archive
+
+[コマンド概要]
+gcc -c -I(ヘッダーファイルの場所指定)　vector.c  <= リンクされるオブジェクトファイルを生成
+gcc -c -I(ヘッダーファイルの場所指定)  angle.c   <= リンクされるオブジェクトファイルを生成
+gcc -I(ヘッダーファイルの場所指定) main.c (=最後にリンクするファイル)　vector.o angle.o -o output
+(すでに作成したリンクするオブジェクトファイルをパスも含めて指定)
+===============================
+gcc -c -I../../includes vector.c
+gcc -c -I../../includes angle.c
+gcc -I../../includes main.c vector.o angle.o -o output
+===============================
+
+------------------
+既存のファイル
+main.c
+vector.c
+angle.c
+------------------
+生成されたファイル
+vector.o
+angle.o
+output
+-----------------
