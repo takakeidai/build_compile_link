@@ -770,12 +770,12 @@ cd nginx-1.23.1
 
 [Install C compiler]  
 ====================================
-yum groupinstall "Development tools"
+sudo yum groupinstall "Development tools"
 ====================================
 
 [Dependence package for Nginx]
 =================================================================
-yum install pcre pcre-devel zlib zlib-devel openssl openssl-devel
+sudo yum install pcre pcre-devel zlib zlib-devel openssl openssl-devel
 =================================================================
 
 [configuration option]
@@ -784,7 +784,7 @@ yum install pcre pcre-devel zlib zlib-devel openssl openssl-devel
 ==========================================================
 ./configure \
 --sbin-path=/usr/bin/nginx \
---conf-path=/etc/nginx/nbginx.conf \
+--conf-path=/etc/nginx/nginx.conf \
 --error-log-path=/var/log/nginx/error.log \
 --http-log-path=/var/log/nginx/access.log \
 --with-pcre \
@@ -812,7 +812,7 @@ sudo nginx -s stop
 
 [Nginx.service]
 =====================================
-vim /lib/systemd/system/nginx.service
+sudo vim /lib/systemd/system/nginx.service
 ======================================
 
 [Paste script and Modify it]
@@ -840,11 +840,11 @@ WantedBy=multi-user.target
 
 [Start Nginx with systemd(systemctl command)]
 ===============================
-systemctl start nginx
-systemctl status nignx
-systemctl stop nginx
-systemctl enable nginx
-systemctl reboot
+sudo systemctl start nginx
+sudo systemctl status nignx
+sudo systemctl stop nginx
+sudo systemctl enable nginx
+sudo systemctl reboot
 ================================
 
 
