@@ -750,11 +750,101 @@ yum search zlib
 sudo yum install zlib
 ======================
 
+""""""""""""""""""""""""""""""
+In real_build/nginx_build.txt
 
+・Nginxをビルドする
+    必要なソフトや依存関係を整理する
+・Nginxをsystemdで操作できるようにする
+    systemdで操作できるように設定ファイルを作成する
 
+[Download Nginx]
+====================================================
+mkdir nginx_dir
+cd nginx_dir
 
+wget https://nginx.org/download/nginx-1.23.1.tar.gz
+tar -zxvf nginx-1.23.1.tar.gz
+cd nginx-1.23.1
+====================================================
 
+[Install C compiler]  
+====================================
+yum groupinstall "Development tools"
+====================================
 
+[Dependence package for Nginx]
+=================================================================
+yum install pcre pcre-devel zlib zlib-devel openssl openssl-devel
+=================================================================
 
+[configuration option]
+--sbin-path= Nginx Excutable(実行ファイル=実体)が格納される
+--conf-path= nginx.confが置かれる場所で、パッケージマネージャーを使う場合と同じ
+==========================================================
+./configure \
+--sbin-path=/usr/bin/nginx \
+--conf-path=/etc/nginx/nbginx.conf \
+--error-log-path=/var/log/nginx/error.log \
+--http-log-path=/var/log/nginx/access.log \
+--with-pcre \
+--pid-path=/var/run/nginx.pid \
+--with-http_ssl_module
+==========================================================
+
+[Build Nginx]
+=====================
+make
+sudo make install
+=====================
+
+[Start, Check and Stop Nginx]
+=======================
+sudo nginx
+ps aux | grep nginx
+sudo nginx -s stop
+=======================
+
+[Systemdで操作できるように設定ファイルを作成する]
+1からビルドしたソフトウェアをsystemdで動かすにはsystemd用にファイルを作成しなければならない。
+ここではそのファイルを/lib/systemd/system/においている。
+ファイルの具体的書き方はwebなどを参照する。
+
+[Nginx.service]
+=====================================
+vim /lib/systemd/system/nginx.service
+======================================
+
+[Paste script and Modify it]
+--------------------------------------------------------------------------------
+[Unit]
+Description=The NGINX HTTP and reverse proxy server
+After=syslog.target network-online.target remote-fs.target nss-lookup.target
+Wants=network-online.target
+
+[Service]
+Type=forking
+#PIDFile=/run/nginx.pid
+PIDFile=/var/run/nginx.pid
+#ExecStartPre=/usr/sbin/nginx -t
+ExecStartPre=/usr/bin/nginx -t
+#ExecStart=/usr/sbin/nginx
+ExecStart=/usr/bin/nginx
+ExecReload=/usr/sbin/nginx -s reload
+ExecStop=/bin/kill -s QUIT $MAINPID
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+--------------------------------------------------------------------------------
+
+[Start Nginx with systemd(systemctl command)]
+===============================
+systemctl start nginx
+systemctl status nignx
+systemctl stop nginx
+systemctl enable nginx
+systemctl reboot
+================================
 
 
